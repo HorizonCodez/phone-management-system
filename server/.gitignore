@@ -5,3 +5,4 @@ node_modules
 /.logs/
 /.idea/
 /prisma/migrations/
+/prisma/schema.prisma.bak
