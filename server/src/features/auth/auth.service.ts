@@ -24,6 +24,38 @@ async function login(data: LoginDto): Promise<LoginResDto> {
     };
 }
 
+async function checkExists(email: string): Promise<boolean> {
+    const user = await prisma.appUser.findUnique({
+        where: {
+            email,
+        },
+    });
+
+    return !!user;
+}
+
+async function register(data: RegisterDto, type: UserType): Promise<AppUser> {
+    // make sure email is unique
+    const existingAppUser = checkExists(data.email);
+    // throw error if user already exists
+    if (existingAppUser) {
+        throw new HttpError(400, 'Email already exists', 'EmailExists');
+    }
+
+    // encrypt password
+    const encryptedPW = await bcrypt.hash(data.password, 10);
+
+    return prisma.appUser.create({
+        data: {
+            email: data.email,
+            password: encryptedPW,
+            type,
+        },
+    });
+}
+
 export default {
     login,
+    register,
+    checkExists,
 };
