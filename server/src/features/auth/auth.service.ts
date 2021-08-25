@@ -2,8 +2,11 @@ import { LoginDto } from './dto/login.dto';
 import bcrypt from 'bcrypt';
 import prisma from '../../lib/prisma';
 import { HttpError } from '../../lib/http-error';
+import { LoginResDto } from './dto/login-res.dto';
+import { RegisterDto } from './dto/register.dto';
+import { AppUser, UserType } from '@prisma/client';
 
-async function login(data: LoginDto): Promise<{ id: number; type: string }> {
+async function login(data: LoginDto): Promise<LoginResDto> {
     // fetch user
     const user = await prisma.appUser.findUnique({
         where: {
