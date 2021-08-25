@@ -10,7 +10,7 @@ const app = express();
 
 /* apply middleware */
 app.use(json());
-app.use(urlencoded());
+app.use(urlencoded({ extended: true }));
 app.use(httpLogger);
 
 // configure express session

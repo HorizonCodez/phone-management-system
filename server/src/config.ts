@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+// values according to current env
 let _databaseURL, _logFile;
 switch (process.env.NODE_ENV) {
     case 'production':
@@ -16,9 +17,9 @@ switch (process.env.NODE_ENV) {
         _databaseURL = process.env.DATABASE_URL;
         _logFile = 'log-dev.log';
 }
+
+// default values for env variables
 export const PORT = process.env.PORT || 4100;
-export const JWT_SECRET = process.env.JWT_SECRET || 'supersecretdonotshare';
-export const JWT_VALIDITY = process.env.JWT_VALIDITY || 3600;
 export const SESSION_SECRET =
     process.env.SESSION_SECRET || 'supersecretdonotshare';
 export const SESSION_MAX_AGE = process.env.SESSION_MAX_AGE
@@ -27,13 +28,3 @@ export const SESSION_MAX_AGE = process.env.SESSION_MAX_AGE
 
 export const DATABASE_URL = _databaseURL;
 export const LOG_FILE = _logFile;
-
-export default {
-    PORT,
-    JWT_SECRET,
-    JWT_VALIDITY,
-    SESSION_SECRET,
-    SESSION_MAX_AGE,
-    DATABASE_URL,
-    LOG_FILE,
-};
