@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
 }
 
 datasource db {
@@ -108,13 +109,12 @@ model District {
 
 model Image {
   id                                      Int                    @id @default(autoincrement())
-  uri                                     String                 @db.VarChar(1000)
-  type                                    String                 @db.VarChar(255)
+  url                                     String                 @db.VarChar(1000)
+  type                                    ImageType
   brands                                  Brand[]                @relation("brandToimage")
   businessRegistration                    BusinessRegistration[] @relation("business_registrationToimage")
   customers                               Customer[]             @relation("customerToimage")
   itemImages                              ItemImage[]            @relation("imageToitem_image")
-  phoneShopImageTophoneShopCoverImageId   PhoneShop[]            @relation("imageTophone_shop_cover_image_id")
   phoneShopImageTophoneShopProfileImageId PhoneShop[]            @relation("imageTophone_shop_profile_image_id")
   siteModerator                           SiteModerator[]        @relation("imageTosite_moderator")
 
@@ -171,10 +171,8 @@ model PhoneShop {
   cityId                              Int
   userId                              Int
   profileImageId                      Int?
-  coverImageId                        Int?
   businessRegistration                BusinessRegistration @relation("business_registrationTophone_shop", fields: [brId], references: [id])
   city                                City                 @relation("cityTophone_shop", fields: [cityId], references: [id])
-  imageImageTophoneShopCoverImageId   Image?               @relation("imageTophone_shop_cover_image_id", fields: [coverImageId], references: [id])
   imageImageTophoneShopProfileImageId Image?               @relation("imageTophone_shop_profile_image_id", fields: [profileImageId], references: [id])
   appUser                             AppUser              @relation("app_userTophone_shop", fields: [userId], references: [id])
   orders                              CustomerOrder[]      @relation("customer_orderTophone_shop")
@@ -183,7 +181,6 @@ model PhoneShop {
   @@index([brId], name: "phone_shop_business_registration_id_fk")
   @@index([cityId], name: "phone_shop_city_id_fk")
   @@index([profileImageId], name: "phone_shop_image_id_fk")
-  @@index([coverImageId], name: "phone_shop_image_id_fk_2")
   @@map("phone_shop")
 }
 
@@ -227,6 +224,13 @@ model SiteModerator {
   @@index([profileImageId], name: "site_moderator_image_id_fk")
   @@map("site_moderator")
 }
+
+enum ImageType {
+  Profile
+  Logo
+  BR
+}
+
 
 enum UserType {
   Admin
