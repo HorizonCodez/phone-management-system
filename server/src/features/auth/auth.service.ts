@@ -34,9 +34,13 @@ async function checkExists(email: string): Promise<boolean> {
     return !!user;
 }
 
-async function register(data: RegisterDto, type: UserType): Promise<AppUser> {
+async function register(
+    data: RegisterDto,
+    type: UserType,
+    prismaClient = prisma
+): Promise<AppUser> {
     // make sure email is unique
-    const existingAppUser = checkExists(data.email);
+    const existingAppUser = await checkExists(data.email);
     // throw error if user already exists
     if (existingAppUser) {
         throw new HttpError(400, 'Email already exists', 'EmailExists');
@@ -45,7 +49,7 @@ async function register(data: RegisterDto, type: UserType): Promise<AppUser> {
     // encrypt password
     const encryptedPW = await bcrypt.hash(data.password, 10);
 
-    return prisma.appUser.create({
+    return prismaClient.appUser.create({
         data: {
             email: data.email,
             password: encryptedPW,
