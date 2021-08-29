@@ -1,5 +1,5 @@
 import { v2 as cloudinary } from 'cloudinary';
-import fs from 'fs';
+import { Readable } from 'stream';
 
 export const cloudinaryUpload = async (file: any, config) => {
     return new Promise((resolve, reject) => {
@@ -7,7 +7,6 @@ export const cloudinaryUpload = async (file: any, config) => {
             {
                 discard_original_filename: true,
                 unique_filename: true,
-                async: true,
                 ...config,
             },
             (error, result) => {
@@ -18,6 +17,10 @@ export const cloudinaryUpload = async (file: any, config) => {
                 }
             }
         );
-        fs.createReadStream(file).pipe(stream);
+        const readableStream = new Readable({
+            read() {},
+        }).pipe(stream);
+        readableStream.push(file);
+        readableStream.end();
     });
 };

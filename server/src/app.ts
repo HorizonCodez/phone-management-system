@@ -53,7 +53,7 @@ app.use((err, req, res, _next) => {
     } else {
         logger.error(err.message);
         res.status(500).send(
-            process.env.NODE_ENV === 'development'
+            process.env.NODE_ENV !== 'production'
                 ? err
                 : 'Internal Server Error'
         );

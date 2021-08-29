@@ -7,6 +7,9 @@ import { GetByIdDto } from '../core/dto/get-by-id.dto';
 import { PhoneShop } from '@prisma/client';
 import { AuthUser } from '../auth/dto/auth.types';
 
+const DEFAULT_SHOP_AVATAR =
+    'https://res.cloudinary.com/mobi-market/image/upload/c_scale,w_80/v1630226499/defaults/shops_zzuccr.png';
+
 async function register(
     req,
     data: PhoneShopRegisterDto,
@@ -38,13 +41,13 @@ async function register(
 
         /** create images **/
         const profileImage = await imageService.create(
-            uploadedProfileImage.secure_url,
+            DEFAULT_SHOP_AVATAR,
             'Profile',
             // @ts-ignore
             prisma
         );
         const brImage = await imageService.create(
-            uploadedBrImage.secure_url,
+            'empty',
             'BR',
             // @ts-ignore
             prisma
@@ -88,24 +91,22 @@ async function register(
     );
 
     /** update images **/
-    await prisma.$transaction(async (prisma) => {
-        prisma.image.update({
-            where: {
-                id: phoneShop.profileImageId,
-            },
-            data: {
-                url: uploadedProfileImage.secure_url,
-            },
-        });
+    await prisma.image.update({
+        where: {
+            id: phoneShop.profileImageId,
+        },
+        data: {
+            url: uploadedProfileImage.secure_url,
+        },
+    });
 
-        prisma.image.update({
-            where: {
-                id: brImageId,
-            },
-            data: {
-                url: uploadedBrImage.secure_url,
-            },
-        });
+    await prisma.image.update({
+        where: {
+            id: brImageId,
+        },
+        data: {
+            url: uploadedBrImage.secure_url,
+        },
     });
 
     /** automatically sign in the user **/
