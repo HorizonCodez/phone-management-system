@@ -15,6 +15,7 @@ async function register(
     data: PhoneShopRegisterDto,
     images: { profileImage: unknown; br: unknown }
 ) {
+    console.time('db');
     // make sure city id is valid
     // todo: make a separate method on city feature
     const city = await prisma.city.findUnique({
@@ -76,7 +77,8 @@ async function register(
             },
         });
     });
-
+    console.timeEnd('db');
+    console.time('upload');
     /** upload images **/
     // add profile image
     const uploadedProfileImage: any = await imageService.uploadImage(
@@ -89,7 +91,9 @@ async function register(
         images.br,
         'BR'
     );
+    console.timeEnd('upload');
 
+    console.time('update');
     /** update images **/
     await prisma.image.update({
         where: {
@@ -108,7 +112,9 @@ async function register(
             url: uploadedBrImage.secure_url,
         },
     });
+    console.timeEnd('update');
 
+    console.time('login');
     /** automatically sign in the user **/
     await authService.login(req, {
         email: data.email,
@@ -176,7 +182,7 @@ async function findById(
 
     /** check view permissions **/
     _verifyViewPermissions(shop, user, ignorePermissions);
-
+    console.timeEnd('login');
     return shop;
 }
 
