@@ -1,4 +1,4 @@
-import seed from './test.seed.json';
+import seed from './seeder';
 import prisma from '../lib/prisma';
 import request from 'supertest';
 import app from '../app';
