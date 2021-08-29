@@ -17,8 +17,7 @@ router.post('/login', async (req, res, next) => {
     }
 
     try {
-        req.session.user = await authService.login(value);
-        return res.status(200).send();
+        return res.status(200).json(await authService.login(req, value));
     } catch (e) {
         return next(e);
     }

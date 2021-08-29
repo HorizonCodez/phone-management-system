@@ -5,6 +5,7 @@ import { HttpError } from './lib/http-error';
 import router from './router';
 import session from 'express-session';
 import { SESSION_MAX_AGE, SESSION_SECRET } from './config';
+import { UserType } from '@prisma/client';
 
 const app = express();
 
@@ -33,7 +34,7 @@ declare module 'express-session' {
     interface SessionData {
         user?: {
             id: number;
-            type: string;
+            type: UserType;
         };
     }
 }

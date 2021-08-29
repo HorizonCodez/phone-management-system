@@ -6,7 +6,7 @@ import { LoginResDto } from './dto/login-res.dto';
 import { RegisterDto } from './dto/register.dto';
 import { AppUser, UserType } from '@prisma/client';
 
-async function login(data: LoginDto): Promise<LoginResDto> {
+async function login(req, data: LoginDto): Promise<LoginResDto> {
     // fetch user
     const user = await prisma.appUser.findUnique({
         where: {
@@ -18,6 +18,11 @@ async function login(data: LoginDto): Promise<LoginResDto> {
     if (!user || !(await bcrypt.compare(data.password, user.password))) {
         throw new HttpError(400, 'Invalid email or password');
     }
+
+    req.session.user = {
+        id: user.id,
+        type: user.type,
+    };
     return {
         id: user.id,
         type: user.type,

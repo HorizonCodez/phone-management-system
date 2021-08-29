@@ -8,6 +8,7 @@ import {
 import phoneShopService from './phone-shop.service';
 import { imageUpload } from '../../lib/local-image-upload';
 import { HttpError } from '../../lib/http-error';
+import { GetByIdDto, getByIdValidationObject } from '../core/dto/get-by-id.dto';
 
 const router = Router();
 
@@ -45,7 +46,7 @@ router.post(
 
         try {
             return res.status(200).json(
-                await phoneShopService.register(value, {
+                await phoneShopService.register(req, value, {
                     profileImage: profileImageBuffer,
                     br: brBuffer,
                 })
@@ -55,5 +56,23 @@ router.post(
         }
     }
 );
+
+router.get('/:id', async (req, res, next) => {
+    const { error, value } = validate<GetByIdDto>({
+        data: req.params,
+        schema: getByIdValidationObject,
+    });
+
+    if (error) {
+        return next(new HttpValidationError(error));
+    }
+    try {
+        return res.json(
+            await phoneShopService.findById(value, req.session.user)
+        );
+    } catch (e) {
+        return next(e);
+    }
+});
 
 export default router;
