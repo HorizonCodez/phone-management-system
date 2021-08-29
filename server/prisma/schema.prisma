@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["interactiveTransactions"]
 }
 
@@ -162,20 +162,20 @@ model ItemImage {
 }
 
 model PhoneShop {
-  id                                  Int                  @id @default(autoincrement())
-  shopName                            String?              @db.VarChar(500)
-  phone                               String?              @db.VarChar(15)
-  address                             String               @db.VarChar(1000)
-  isVerified                          Boolean              @default(false)
-  brId                                Int
-  cityId                              Int
-  userId                              Int
-  profileImageId                      Int?
-  businessRegistration                BusinessRegistration @relation("business_registrationTophone_shop", fields: [brId], references: [id])
-  city                                City                 @relation("cityTophone_shop", fields: [cityId], references: [id])
-  imageImageTophoneShopProfileImageId Image?               @relation("imageTophone_shop_profile_image_id", fields: [profileImageId], references: [id])
-  appUser                             AppUser              @relation("app_userTophone_shop", fields: [userId], references: [id])
-  orders                              CustomerOrder[]      @relation("customer_orderTophone_shop")
+  id                   Int                  @id @default(autoincrement())
+  shopName             String?              @db.VarChar(500)
+  phone                String?              @db.VarChar(15)
+  address              String               @db.VarChar(1000)
+  isVerified           Boolean              @default(false)
+  brId                 Int
+  cityId               Int
+  userId               Int
+  profileImageId       Int?
+  businessRegistration BusinessRegistration @relation("business_registrationTophone_shop", fields: [brId], references: [id])
+  city                 City                 @relation("cityTophone_shop", fields: [cityId], references: [id])
+  profileImage         Image?               @relation("imageTophone_shop_profile_image_id", fields: [profileImageId], references: [id])
+  appUser              AppUser              @relation("app_userTophone_shop", fields: [userId], references: [id])
+  orders               CustomerOrder[]      @relation("customer_orderTophone_shop")
 
   @@index([userId], name: "phone_shop_app_user_id_fk")
   @@index([brId], name: "phone_shop_business_registration_id_fk")
@@ -230,7 +230,6 @@ enum ImageType {
   Logo
   BR
 }
-
 
 enum UserType {
   Admin

@@ -164,7 +164,7 @@ async function findById(
                 },
             },
             city: true,
-            imageImageTophoneShopProfileImageId: true,
+            profileImage: true,
         },
     });
 
