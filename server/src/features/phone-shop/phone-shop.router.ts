@@ -12,6 +12,7 @@ import { GetByIdDto, getByIdValidationObject } from '../core/dto/get-by-id.dto';
 
 const router = Router();
 
+/** register a phone shop **/
 router.post(
     '/register',
     imageUpload.fields([
@@ -30,19 +31,18 @@ router.post(
 
         /** checking images for errors **/
         // validate images
-        // @ts-ignore
-        if (!req.files.profileImage || !Array.isArray(req.files.profileImage)) {
+        if (
+            !req.files['profileImage'] ||
+            !Array.isArray(req.files['profileImage'])
+        ) {
             return next(new HttpError(400, 'Invalid profileImage'));
         }
-        // @ts-ignore
-        if (!req.files.brImage || !Array.isArray(req.files.brImage)) {
+        if (!req.files['brImage'] || !Array.isArray(req.files['brImage'])) {
             return next(new HttpError(400, 'Invalid brImage'));
         }
 
-        // @ts-ignore
-        const profileImageBuffer = req.files.profileImage[0]?.buffer;
-        // @ts-ignore
-        const brBuffer = req.files.brImage[0]?.buffer;
+        const profileImageBuffer = req.files['profileImage'][0]?.buffer;
+        const brBuffer = req.files['brImage'][0]?.buffer;
 
         try {
             return res.status(200).json(
@@ -57,6 +57,7 @@ router.post(
     }
 );
 
+/** find a shop by id **/
 router.get('/:id', async (req, res, next) => {
     const { error, value } = validate<GetByIdDto>({
         data: req.params,
