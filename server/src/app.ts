@@ -5,6 +5,7 @@ import { HttpError } from './lib/http-error';
 import router from './router';
 import session from 'express-session';
 import { SESSION_MAX_AGE, SESSION_SECRET } from './config';
+import { UserType } from '@prisma/client';
 
 const app = express();
 
@@ -33,7 +34,7 @@ declare module 'express-session' {
     interface SessionData {
         user?: {
             id: number;
-            type: string;
+            type: UserType;
         };
     }
 }
@@ -52,7 +53,7 @@ app.use((err, req, res, _next) => {
     } else {
         logger.error(err.message);
         res.status(500).send(
-            process.env.NODE_ENV === 'development'
+            process.env.NODE_ENV !== 'production'
                 ? err
                 : 'Internal Server Error'
         );

@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
 }
 
 datasource db {
@@ -42,15 +43,14 @@ model BusinessRegistration {
 }
 
 model City {
-  id         Int         @id @default(autoincrement())
-  name       String      @unique @db.VarChar(255)
-  zipCode    Int         @unique
-  districtId Int?
-  district   District?   @relation("cityTodistrict", fields: [districtId], references: [id])
-  customers  Customer[]  @relation("cityTocustomer")
-  phoneShops PhoneShop[] @relation("cityTophone_shop")
+  id            Int         @id @default(autoincrement())
+  name          String      @unique @db.VarChar(255)
+  zipCode       Int         @unique
+  districtName  String      @unique
+  proviniceName String      @unique
+  customers     Customer[]  @relation("cityTocustomer")
+  phoneShops    PhoneShop[] @relation("cityTophone_shop")
 
-  @@index([districtId], name: "city_district_id_fk")
   @@map("city")
 }
 
@@ -95,26 +95,14 @@ model CustomerOrder {
   @@map("customer_order")
 }
 
-model District {
-  id         Int      @id @default(autoincrement())
-  name       String   @unique @db.VarChar(255)
-  provinceId Int
-  province   Province @relation("districtToprovince", fields: [provinceId], references: [id])
-  cities     City[]   @relation("cityTodistrict")
-
-  @@index([provinceId], name: "district_province_id_fk")
-  @@map("district")
-}
-
 model Image {
   id                                      Int                    @id @default(autoincrement())
-  uri                                     String                 @db.VarChar(1000)
-  type                                    String                 @db.VarChar(255)
+  url                                     String                 @db.VarChar(1000)
+  type                                    ImageType
   brands                                  Brand[]                @relation("brandToimage")
   businessRegistration                    BusinessRegistration[] @relation("business_registrationToimage")
   customers                               Customer[]             @relation("customerToimage")
   itemImages                              ItemImage[]            @relation("imageToitem_image")
-  phoneShopImageTophoneShopCoverImageId   PhoneShop[]            @relation("imageTophone_shop_cover_image_id")
   phoneShopImageTophoneShopProfileImageId PhoneShop[]            @relation("imageTophone_shop_profile_image_id")
   siteModerator                           SiteModerator[]        @relation("imageTosite_moderator")
 
@@ -162,37 +150,26 @@ model ItemImage {
 }
 
 model PhoneShop {
-  id                                  Int                  @id @default(autoincrement())
-  shopName                            String?              @db.VarChar(500)
-  phone                               String?              @db.VarChar(15)
-  address                             String               @db.VarChar(1000)
-  isVerified                          Boolean              @default(false)
-  brId                                Int
-  cityId                              Int
-  userId                              Int
-  profileImageId                      Int?
-  coverImageId                        Int?
-  businessRegistration                BusinessRegistration @relation("business_registrationTophone_shop", fields: [brId], references: [id])
-  city                                City                 @relation("cityTophone_shop", fields: [cityId], references: [id])
-  imageImageTophoneShopCoverImageId   Image?               @relation("imageTophone_shop_cover_image_id", fields: [coverImageId], references: [id])
-  imageImageTophoneShopProfileImageId Image?               @relation("imageTophone_shop_profile_image_id", fields: [profileImageId], references: [id])
-  appUser                             AppUser              @relation("app_userTophone_shop", fields: [userId], references: [id])
-  orders                              CustomerOrder[]      @relation("customer_orderTophone_shop")
+  id                   Int                  @id @default(autoincrement())
+  shopName             String?              @db.VarChar(500)
+  phone                String?              @db.VarChar(15)
+  address              String               @db.VarChar(1000)
+  isVerified           Boolean              @default(false)
+  brId                 Int
+  cityId               Int
+  userId               Int
+  profileImageId       Int?
+  businessRegistration BusinessRegistration @relation("business_registrationTophone_shop", fields: [brId], references: [id])
+  city                 City                 @relation("cityTophone_shop", fields: [cityId], references: [id])
+  profileImage         Image?               @relation("imageTophone_shop_profile_image_id", fields: [profileImageId], references: [id])
+  appUser              AppUser              @relation("app_userTophone_shop", fields: [userId], references: [id])
+  orders               CustomerOrder[]      @relation("customer_orderTophone_shop")
 
   @@index([userId], name: "phone_shop_app_user_id_fk")
   @@index([brId], name: "phone_shop_business_registration_id_fk")
   @@index([cityId], name: "phone_shop_city_id_fk")
   @@index([profileImageId], name: "phone_shop_image_id_fk")
-  @@index([coverImageId], name: "phone_shop_image_id_fk_2")
   @@map("phone_shop")
-}
-
-model Province {
-  id        Int        @id @default(autoincrement())
-  name      String     @unique @db.VarChar(255)
-  districts District[] @relation("districtToprovince")
-
-  @@map("province")
 }
 
 model Review {
@@ -226,6 +203,12 @@ model SiteModerator {
   @@index([userId], name: "site_moderator_app_user_id_fk")
   @@index([profileImageId], name: "site_moderator_image_id_fk")
   @@map("site_moderator")
+}
+
+enum ImageType {
+  Profile
+  Logo
+  BR
 }
 
 enum UserType {
