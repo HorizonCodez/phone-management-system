@@ -43,15 +43,14 @@ model BusinessRegistration {
 }
 
 model City {
-  id         Int         @id @default(autoincrement())
-  name       String      @unique @db.VarChar(255)
-  zipCode    Int         @unique
-  districtId Int?
-  district   District?   @relation("cityTodistrict", fields: [districtId], references: [id])
-  customers  Customer[]  @relation("cityTocustomer")
-  phoneShops PhoneShop[] @relation("cityTophone_shop")
+  id            Int         @id @default(autoincrement())
+  name          String      @unique @db.VarChar(255)
+  zipCode       Int         @unique
+  districtName  String      @unique
+  proviniceName String      @unique
+  customers     Customer[]  @relation("cityTocustomer")
+  phoneShops    PhoneShop[] @relation("cityTophone_shop")
 
-  @@index([districtId], name: "city_district_id_fk")
   @@map("city")
 }
 
@@ -94,17 +93,6 @@ model CustomerOrder {
   @@index([customerId], name: "order_customer_id_fk")
   @@index([phoneShopId], name: "order_phone_shop_id_fk")
   @@map("customer_order")
-}
-
-model District {
-  id         Int      @id @default(autoincrement())
-  name       String   @unique @db.VarChar(255)
-  provinceId Int
-  province   Province @relation("districtToprovince", fields: [provinceId], references: [id])
-  cities     City[]   @relation("cityTodistrict")
-
-  @@index([provinceId], name: "district_province_id_fk")
-  @@map("district")
 }
 
 model Image {
@@ -182,14 +170,6 @@ model PhoneShop {
   @@index([cityId], name: "phone_shop_city_id_fk")
   @@index([profileImageId], name: "phone_shop_image_id_fk")
   @@map("phone_shop")
-}
-
-model Province {
-  id        Int        @id @default(autoincrement())
-  name      String     @unique @db.VarChar(255)
-  districts District[] @relation("districtToprovince")
-
-  @@map("province")
 }
 
 model Review {

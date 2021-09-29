@@ -5,13 +5,12 @@ import { HttpError } from '../../lib/http-error';
 import imageService from '../image/image.service';
 import { GetByIdDto } from '../core/dto/get-by-id.dto';
 import { PhoneShop } from '@prisma/client';
-import { AuthUser } from '../auth/dto/auth.types';
+import { AuthUser } from '../auth/auth.types';
 
 const DEFAULT_SHOP_AVATAR =
     'https://res.cloudinary.com/mobi-market/image/upload/c_scale,w_80/v1630226499/defaults/shops_zzuccr.png';
 
 async function register(
-    req,
     data: PhoneShopRegisterDto,
     images: { profileImage: unknown; br: unknown }
 ) {
@@ -108,12 +107,6 @@ async function register(
         },
     });
 
-    /** automatically sign in the user **/
-    await authService.login(req, {
-        email: data.email,
-        password: data.password,
-    });
-
     return findById({ id: phoneShop.id }, null, true);
 }
 
@@ -142,6 +135,12 @@ function _verifyViewPermissions(
     throw new HttpError(403, 'You dont have permission to view this shop');
 }
 
+/**
+ * Find a shop by the given id
+ * @param data object with property id inside
+ * @param user current user
+ * @param ignorePermissions ignore all permission checks if true
+ */
 async function findById(
     data: GetByIdDto,
     user?: AuthUser,

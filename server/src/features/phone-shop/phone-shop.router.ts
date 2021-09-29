@@ -9,6 +9,7 @@ import phoneShopService from './phone-shop.service';
 import { imageUpload } from '../../lib/local-image-upload';
 import { HttpError } from '../../lib/http-error';
 import { GetByIdDto, getByIdValidationObject } from '../core/dto/get-by-id.dto';
+import authService from '../auth/auth.service';
 
 const router = Router();
 
@@ -45,12 +46,18 @@ router.post(
         const brBuffer = req.files['brImage'][0]?.buffer;
 
         try {
-            return res.status(200).json(
-                await phoneShopService.register(req, value, {
-                    profileImage: profileImageBuffer,
-                    br: brBuffer,
-                })
-            );
+            const shop = await phoneShopService.register(value, {
+                profileImage: profileImageBuffer,
+                br: brBuffer,
+            });
+
+            /** automatically sign in the user **/
+            await authService.login(req, {
+                email: value.email,
+                password: value.password,
+            });
+
+            return res.status(200).json(shop);
         } catch (e) {
             return next(e);
         }
