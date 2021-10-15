@@ -10,6 +10,7 @@ import { imageUpload } from '../../lib/local-image-upload';
 import { HttpError } from '../../lib/http-error';
 import { GetByIdDto, getByIdValidationObject } from '../core/dto/get-by-id.dto';
 import authService from '../auth/auth.service';
+import { authGuard } from '../auth/auth.guard';
 
 const router = Router();
 
@@ -82,5 +83,27 @@ router.get('/:id', async (req, res, next) => {
         return next(e);
     }
 });
+
+/**
+ * Verify a shop as admin
+ */
+router.put(
+    '/verify/:id',
+    authGuard(['Moderator', 'Admin']),
+    async (req, res, next) => {
+        const { error, value } = validate<GetByIdDto>({
+            data: req.params,
+            schema: getByIdValidationObject,
+        });
+        if (error) {
+            return next(new HttpValidationError(error));
+        }
+        try {
+            return res.json(await phoneShopService.approveShop(value));
+        } catch (e) {
+            next(e);
+        }
+    }
+);
 
 export default router;

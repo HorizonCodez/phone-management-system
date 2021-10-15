@@ -52,6 +52,9 @@ app.use((err, req, res, _next) => {
         );
     } else {
         logger.error(err.message);
+        if (process.env.NODE_ENV === 'development') {
+            logger.error(err.stack);
+        }
         res.status(500).send(
             process.env.NODE_ENV !== 'production'
                 ? err

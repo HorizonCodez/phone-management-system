@@ -25,7 +25,6 @@ async function register(
         throw new HttpError(404, 'Invalid city id', 'CityNotFound');
     }
 
-    let brImageId;
     const phoneShop = await prisma.$transaction(async (prisma) => {
         /** create app user **/
         const user = await authService.register(
@@ -51,15 +50,6 @@ async function register(
             // @ts-ignore
             prisma
         );
-        brImageId = brImage.id;
-
-        /** create br **/
-        const br = await prisma.businessRegistration.create({
-            data: {
-                imgId: brImage.id,
-                registrationNumber: data.brNumber,
-            },
-        });
 
         /** create phone shop in database **/
         return prisma.phoneShop.create({
@@ -70,7 +60,7 @@ async function register(
                 phone: data.phone,
                 isVerified: false,
                 cityId: data.cityId,
-                brId: br.id,
+                brImageId: brImage.id,
                 profileImageId: profileImage.id,
             },
         });
@@ -100,7 +90,7 @@ async function register(
 
     await prisma.image.update({
         where: {
-            id: brImageId,
+            id: phoneShop.brImageId,
         },
         data: {
             url: uploadedBrImage.secure_url,
@@ -127,6 +117,7 @@ function _verifyViewPermissions(
         shop.isVerified ||
         ignorePermissions ||
         user?.type === 'Admin' ||
+        user?.type === 'Moderator' ||
         user?.id === shop.userId
     ) {
         return true;
@@ -146,25 +137,25 @@ async function findById(
     user?: AuthUser,
     ignorePermissions: boolean = false
 ) {
+    const includeObject: any = {
+        appUser: {
+            select: {
+                email: true,
+                type: true,
+            },
+        },
+        city: true,
+        profileImage: true,
+    };
+    if (user?.type === 'Admin' || user?.type === 'Moderator') {
+        includeObject.brImage = true;
+    }
+
     const shop = await prisma.phoneShop.findUnique({
         where: {
             id: data.id,
         },
-        include: {
-            appUser: {
-                select: {
-                    email: true,
-                    type: true,
-                },
-            },
-            businessRegistration: {
-                include: {
-                    image: true,
-                },
-            },
-            city: true,
-            profileImage: true,
-        },
+        include: includeObject,
     });
 
     /** throw error if shop does not exists **/
@@ -177,7 +168,22 @@ async function findById(
     return shop;
 }
 
+/**
+ * Approve a shop as  admin
+ */
+async function approveShop(data: GetByIdDto) {
+    return prisma.phoneShop.update({
+        where: {
+            id: data.id,
+        },
+        data: {
+            isVerified: true,
+        },
+    });
+}
+
 export default {
     register,
     findById,
+    approveShop,
 };

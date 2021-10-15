@@ -11,6 +11,11 @@ export const getImageConfig = (imageType: ImageType) => {
             return {
                 folder: 'br',
             };
+        case 'Item':
+            return {
+                folder: 'items',
+                transformation: [{ width: 500, height: 500, crop: 'scale' }],
+            };
         default:
             return {};
     }
