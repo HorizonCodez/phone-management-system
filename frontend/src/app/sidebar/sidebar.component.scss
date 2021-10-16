@@ -1,0 +1,37 @@
+.active-nav-button {
+  @apply
+  flex
+  items-center
+  shadow-md
+  active:shadow-sm
+  px-4
+  py-3
+  rounded-2xl
+
+  bg-gradient-to-r
+  from-crimsonRed
+  to-red-600
+  hover:to-red-700
+  active:to-red-600
+
+  text-white
+  font-semibold
+  cursor-pointer
+  duration-200
+}
+
+.inactive-nav-button {
+  @apply
+  flex
+  items-center
+  mt-2
+  px-4
+  py-3
+  rounded-2xl
+  border-2
+  text-gray-500
+  cursor-pointer
+  active:shadow-sm
+  hover:border-gray-500 hover:bg-gray-50
+  duration-200
+}
