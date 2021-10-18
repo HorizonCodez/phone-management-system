@@ -9,6 +9,9 @@ import { HomePageComponent } from './home-page/home-page.component';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { UserRegisterPageComponent } from './user-register-page/user-register-page.component';
 import { ShopRegisterPageComponent } from './shop-register-page/shop-register-page.component';
+import { ListingCardComponent } from './listing-card/listing-card.component';
+import { ViewListingComponent } from './view-listing/view-listing.component';
+import { GalleryModule } from 'ng-gallery';
 
 @NgModule({
   declarations: [
@@ -18,13 +21,12 @@ import { ShopRegisterPageComponent } from './shop-register-page/shop-register-pa
     HomePageComponent,
     LoginPageComponent,
     UserRegisterPageComponent,
-    ShopRegisterPageComponent
+    ShopRegisterPageComponent,
+    ListingCardComponent,
+    ViewListingComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
+  imports: [BrowserModule, AppRoutingModule, GalleryModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
