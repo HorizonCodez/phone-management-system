@@ -55,11 +55,14 @@ model CustomerOrder {
   id                                 Int       @id @default(autoincrement())
   phoneShopId                        Int
   customerId                         Int?
+  itemId                             Int
+  itemQty                            Int
   deliveryPrice                      Decimal?  @db.Decimal(2, 0)
   totalAmount                        Decimal   @db.Decimal(2, 0)
-  staus                              String    @db.VarChar(255)
+  status                             String    @db.VarChar(255)
   address                            String    @db.VarChar(1000)
   reviewId                           Int?
+  item                               Item      @relation("customer_orderToItem", fields: [itemId], references: [id])
   customer                           Customer? @relation("customerTocustomer_order", fields: [customerId], references: [id])
   phoneShop                          PhoneShop @relation("customer_orderTophone_shop", fields: [phoneShopId], references: [id])
   review                             Review?   @relation("customer_order_review_idToreview", fields: [reviewId], references: [id])
@@ -96,6 +99,7 @@ model Item {
   reviews        Review[]    @relation("itemToreview")
 
   @@map("item")
+  CustomerOrder CustomerOrder[] @relation("customer_orderToItem")
 }
 
 model ItemImage {
@@ -127,12 +131,12 @@ model PhoneShop {
   appUser        AppUser         @relation("app_userTophone_shop", fields: [userId], references: [id])
   orders         CustomerOrder[] @relation("customer_orderTophone_shop")
 
+  Item Item[] @relation("itemTo_phoneShop")
   @@index([userId], name: "phone_shop_app_user_id_fk")
   @@index([cityId], name: "phone_shop_city_id_fk")
   @@index([profileImageId], name: "phone_shop_image_id_fk")
   @@index([brImageId], name: "phone_shop_br_image_id_fk")
   @@map("phone_shop")
-  Item Item[] @relation("itemTo_phoneShop")
 }
 
 model Review {
