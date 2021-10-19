@@ -10,7 +10,7 @@ datasource db {
 
 model AppUser {
   id             Int             @id @default(autoincrement())
-  email          String          @unique @db.VarChar(1000)
+  email          String          @unique @db.VarChar(255)
   password       String          @db.VarChar(255)
   type           UserType
   customers      Customer[]      @relation("app_userTocustomer")
@@ -89,7 +89,9 @@ model Item {
   title          String      @db.VarChar(255)
   description    String      @db.VarChar(5000)
   availableStock Int
-  details        String      @default("{}") @db.LongText
+  details        String      @db.LongText
+  shopId         Int
+  phoneShop      PhoneShop   @relation("itemTo_phoneShop", fields: [shopId], references: [id])
   itemImages     ItemImage[] @relation("itemToitem_image")
   reviews        Review[]    @relation("itemToreview")
 
@@ -130,6 +132,7 @@ model PhoneShop {
   @@index([profileImageId], name: "phone_shop_image_id_fk")
   @@index([brImageId], name: "phone_shop_br_image_id_fk")
   @@map("phone_shop")
+  Item Item[] @relation("itemTo_phoneShop")
 }
 
 model Review {
