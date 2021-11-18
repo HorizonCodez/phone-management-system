@@ -10,6 +10,10 @@ import itemService from './item.service';
 import { imageUpload } from '../../lib/local-image-upload';
 import { HttpError } from '../../lib/http-error';
 import { GetByIdDto, getByIdValidationObject } from '../core/dto/get-by-id.dto';
+import {
+    FindItemByQueryDto,
+    findItemByQueryValidationObject,
+} from './dto/find-item-by-query.dto';
 
 const router = Router();
 
@@ -48,7 +52,6 @@ router.post(
 );
 
 /** get item by id **/
-
 router.get('/:id', async (req, res, next) => {
     const { error, value } = validate<GetByIdDto>({
         data: req.params,
@@ -61,6 +64,24 @@ router.get('/:id', async (req, res, next) => {
 
     try {
         return res.json(await itemService.findById(value.id));
+    } catch (e) {
+        next(e);
+    }
+});
+
+/** find items by query paginated **/
+router.get('/', async (req, res, next) => {
+    const { error, value } = validate<FindItemByQueryDto>({
+        data: req.query,
+        schema: findItemByQueryValidationObject,
+    });
+
+    if (error) {
+        return next(new HttpValidationError(error));
+    }
+
+    try {
+        return res.json(await itemService.findByQuery(value));
     } catch (e) {
         next(e);
     }

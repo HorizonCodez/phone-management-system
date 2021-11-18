@@ -57,8 +57,8 @@ model CustomerOrder {
   customerId                         Int?
   itemId                             Int
   itemQty                            Int
-  deliveryPrice                      Decimal?  @db.Decimal(2, 0)
-  totalAmount                        Decimal   @db.Decimal(2, 0)
+  deliveryPrice                      Decimal?  @db.Decimal(10, 2)
+  totalAmount                        Decimal   @db.Decimal(10, 2)
   status                             String    @db.VarChar(255)
   address                            String    @db.VarChar(1000)
   reviewId                           Int?
@@ -91,8 +91,8 @@ model Item {
   id             Int         @id @default(autoincrement())
   title          String      @db.VarChar(255)
   description    String      @db.VarChar(5000)
+  price          Decimal     @db.Decimal(10, 2)
   availableStock Int
-  details        String      @db.LongText
   shopId         Int
   phoneShop      PhoneShop   @relation("itemTo_phoneShop", fields: [shopId], references: [id])
   itemImages     ItemImage[] @relation("itemToitem_image")

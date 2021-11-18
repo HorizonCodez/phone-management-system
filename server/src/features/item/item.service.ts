@@ -3,6 +3,8 @@ import { AuthUser } from '../auth/auth.types';
 import imageService from '../image/image.service';
 import { CreateItemDto } from './dto/create-item.dto';
 import { ItemImage } from '@prisma/client';
+import { FindItemByQueryDto } from './dto/find-item-by-query.dto';
+import { ITEMS_PER_PAGE } from '../../config';
 
 async function addItem(user: AuthUser, data: CreateItemDto, images: any[]) {
     const { item, itemImages } = await prisma.$transaction(async (prisma) => {
@@ -12,7 +14,8 @@ async function addItem(user: AuthUser, data: CreateItemDto, images: any[]) {
                 availableStock: data.availableStock,
                 title: data.title,
                 description: data.description,
-                details: '',
+                price: data.price,
+                shopId: user.id,
             },
         });
 
@@ -79,7 +82,38 @@ async function findById(id: number) {
     });
 }
 
-async function findByQuery() {}
+async function findByQuery(query: FindItemByQueryDto) {
+    return prisma.item.findMany({
+        where: {
+            price: {
+                gte: query.minPrice,
+                lte: query.maxPrice,
+            },
+            OR: [
+                {
+                    title: {
+                        contains: query.search,
+                    },
+                },
+                {
+                    description: {
+                        contains: query.search,
+                    },
+                },
+            ],
+        },
+        include: {
+            itemImages: {
+                select: {
+                    image: true,
+                },
+            },
+            reviews: true,
+        },
+        skip: (query.page - 1) * ITEMS_PER_PAGE,
+        take: ITEMS_PER_PAGE,
+    });
+}
 
 export default {
     addItem,
