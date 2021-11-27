@@ -1,0 +1,6 @@
+<div class="flex flex-wrap justify-center">
+  <app-listing-card *ngFor="let item of items"
+                    [id]="item.id"
+                    [price]="item.price" [title]="item.title"
+                    [imgSrc]="item.itemImages[0].image.url" [shopName]="item.phoneShop.shopName"></app-listing-card>
+</div>

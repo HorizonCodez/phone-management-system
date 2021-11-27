@@ -28,3 +28,6 @@ export const SESSION_MAX_AGE = process.env.SESSION_MAX_AGE
 
 export const DATABASE_URL = _databaseURL;
 export const LOG_FILE = _logFile;
+
+export const ITEMS_PER_PAGE =
+    (process.env.ITEMS_PER_PAGE && parseInt(process.env.ITEMS_PER_PAGE)) || 10;

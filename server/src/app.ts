@@ -6,10 +6,17 @@ import router from './router';
 import session from 'express-session';
 import { SESSION_MAX_AGE, SESSION_SECRET } from './config';
 import { UserType } from '@prisma/client';
+import cors from 'cors';
 
 const app = express();
 
 /* apply middleware */
+app.use(
+    cors({
+        origin: 'http://localhost:4200',
+        credentials: true,
+    })
+);
 app.use(json());
 app.use(urlencoded({ extended: true }));
 app.use(httpLogger);

@@ -9,13 +9,13 @@ datasource db {
 }
 
 model AppUser {
-  id             Int             @id @default(autoincrement())
-  email          String          @unique @db.VarChar(1000)
-  password       String          @db.VarChar(255)
-  type           UserType
-  customers      Customer[]      @relation("app_userTocustomer")
-  phoneShops     PhoneShop[]     @relation("app_userTophone_shop")
-  siteModerators SiteModerator[] @relation("app_userTosite_moderator")
+  id            Int            @id @default(autoincrement())
+  email         String         @unique @db.VarChar(255)
+  password      String         @db.VarChar(255)
+  type          UserType
+  customer      Customer?      @relation("app_userTocustomer")
+  phoneShop     PhoneShop?     @relation("app_userTophone_shop")
+  siteModerator SiteModerator? @relation("app_userTosite_moderator")
 
   @@map("app_user")
 }
@@ -36,11 +36,11 @@ model Customer {
   lastName       String          @db.VarChar(255)
   phone          String          @db.VarChar(15)
   address        String?         @db.VarChar(1000)
-  userId         Int
+  userId         Int             @unique
   cityId         Int
   profileImageId Int?
   city           City            @relation("cityTocustomer", fields: [cityId], references: [id])
-  image          Image?          @relation("customerToimage", fields: [profileImageId], references: [id])
+  profileImage   Image?          @relation("customerToimage", fields: [profileImageId], references: [id])
   appUser        AppUser         @relation("app_userTocustomer", fields: [userId], references: [id])
   orders         CustomerOrder[] @relation("customerTocustomer_order")
   reviews        Review[]        @relation("customerToreview")
@@ -55,11 +55,14 @@ model CustomerOrder {
   id                                 Int       @id @default(autoincrement())
   phoneShopId                        Int
   customerId                         Int?
-  deliveryPrice                      Decimal?  @db.Decimal(2, 0)
-  totalAmount                        Decimal   @db.Decimal(2, 0)
-  staus                              String    @db.VarChar(255)
+  itemId                             Int
+  itemQty                            Int
+  deliveryPrice                      Decimal?  @db.Decimal(10, 2)
+  totalAmount                        Decimal   @db.Decimal(10, 2)
+  status                             String    @db.VarChar(255)
   address                            String    @db.VarChar(1000)
   reviewId                           Int?
+  item                               Item      @relation("customer_orderToItem", fields: [itemId], references: [id])
   customer                           Customer? @relation("customerTocustomer_order", fields: [customerId], references: [id])
   phoneShop                          PhoneShop @relation("customer_orderTophone_shop", fields: [phoneShopId], references: [id])
   review                             Review?   @relation("customer_order_review_idToreview", fields: [reviewId], references: [id])
@@ -88,11 +91,14 @@ model Item {
   id             Int         @id @default(autoincrement())
   title          String      @db.VarChar(255)
   description    String      @db.VarChar(5000)
+  price          Decimal     @db.Decimal(10, 2)
   availableStock Int
-  details        String      @default("{}") @db.LongText
+  shopId         Int
+  phoneShop      PhoneShop   @relation("itemTo_phoneShop", fields: [shopId], references: [id])
   itemImages     ItemImage[] @relation("itemToitem_image")
   reviews        Review[]    @relation("itemToreview")
 
+  CustomerOrder CustomerOrder[] @relation("customer_orderToItem")
   @@map("item")
 }
 
@@ -116,7 +122,7 @@ model PhoneShop {
   address        String          @db.VarChar(1000)
   isVerified     Boolean         @default(false)
   cityId         Int
-  userId         Int
+  userId         Int             @unique
   profileImageId Int?
   brImageId      Int?
   city           City            @relation("cityTophone_shop", fields: [cityId], references: [id])
@@ -125,6 +131,7 @@ model PhoneShop {
   appUser        AppUser         @relation("app_userTophone_shop", fields: [userId], references: [id])
   orders         CustomerOrder[] @relation("customer_orderTophone_shop")
 
+  Item Item[] @relation("itemTo_phoneShop")
   @@index([userId], name: "phone_shop_app_user_id_fk")
   @@index([cityId], name: "phone_shop_city_id_fk")
   @@index([profileImageId], name: "phone_shop_image_id_fk")
@@ -151,14 +158,14 @@ model Review {
 }
 
 model SiteModerator {
-  id             Int      @id @default(autoincrement())
-  employeeNumber String   @unique @db.VarChar(20)
-  firstName      String   @db.VarChar(255)
-  lastName       String   @db.VarChar(255)
-  userId         Int?
+  id             Int     @id @default(autoincrement())
+  employeeNumber String  @unique @db.VarChar(20)
+  firstName      String  @db.VarChar(255)
+  lastName       String  @db.VarChar(255)
+  userId         Int     @unique
   profileImageId Int?
-  image          Image?   @relation("imageTosite_moderator", fields: [profileImageId], references: [id])
-  appUser        AppUser? @relation("app_userTosite_moderator", fields: [userId], references: [id])
+  profileImage   Image?  @relation("imageTosite_moderator", fields: [profileImageId], references: [id])
+  appUser        AppUser @relation("app_userTosite_moderator", fields: [userId], references: [id])
 
   @@index([userId], name: "site_moderator_app_user_id_fk")
   @@index([profileImageId], name: "site_moderator_image_id_fk")

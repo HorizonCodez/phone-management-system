@@ -13,6 +13,7 @@
         w-full
       "
       placeholder="Search"
+      [(ngModel)]="search"
     />
     <button
       class="
@@ -28,23 +29,28 @@
         text-white
         font-semibold
       "
+      (click)="searchNow()"
     >
       Search
     </button>
   </div>
-  <div class="flex items-center">
+  <div class="flex items-center" *ngIf="user">
     <img
-      src="https://thumbs.dreamstime.com/b/female-avatar-profile-picture-vector-female-avatar-profile-picture-vector-102690279.jpg"
+      src="{{user?.profile?.profileImage?.url}}"
       class="rounded-full"
       height="50px"
       width="50px"
     />
-    <div class="ml-2 font-semibold text-gray-600">John Black</div>
-    <img
-      src="assets/icons/ph_shopping-cart-simple-light.svg"
-      class="ml-4"
-      width="25px"
-    />
-    <img src="assets/icons/ph_caret-down-light.svg" class="ml-2" width="25px" />
+    <div class="ml-2 font-semibold text-gray-600" *ngIf="user.type == 'Shop'">
+      {{user.profile?.shopName}}
+    </div>
+    <div class="ml-2 font-semibold text-gray-600" *ngIf="user.type == 'Customer' || user.type == 'Moderator'">
+      {{user.profile?.firstName}} {{user.profile?.lastName}}
+    </div>
+    <button
+      (click)="logout()"
+      class="m-3 border-crimsonRed rounded-md border-2 px-2 py-1 text-crimsonRed hover:text-white hover:bg-crimsonRed">
+      Logout
+    </button>
   </div>
 </div>

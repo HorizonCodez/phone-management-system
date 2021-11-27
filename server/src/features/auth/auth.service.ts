@@ -63,8 +63,56 @@ async function register(
     });
 }
 
+async function getProfile(user: { id: number; type: UserType }): Promise<any> {
+    const { phoneShop, customer, siteModerator, ...result } =
+        await prisma.appUser.findUnique({
+            where: {
+                id: user.id,
+            },
+            select: {
+                id: true,
+                email: true,
+                type: true,
+                customer: {
+                    include: {
+                        profileImage: true,
+                    },
+                },
+                phoneShop: {
+                    include: {
+                        profileImage: true,
+                    },
+                },
+                siteModerator: {
+                    include: {
+                        profileImage: true,
+                    },
+                },
+            },
+        });
+
+    switch (user.type) {
+        case UserType.Customer:
+            return {
+                ...result,
+                profile: customer,
+            };
+        case UserType.Shop:
+            return {
+                ...result,
+                profile: phoneShop,
+            };
+        case UserType.Moderator:
+            return {
+                ...result,
+                profile: siteModerator,
+            };
+    }
+}
+
 export default {
     login,
     register,
     checkExists,
+    getProfile,
 };

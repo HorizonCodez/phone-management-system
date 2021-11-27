@@ -9,6 +9,7 @@ module.exports = {
     extend: {
       colors: {
         crimsonRed: "#F32D20",
+        ratingGold: "#FCC70D",
       },
     },
   },

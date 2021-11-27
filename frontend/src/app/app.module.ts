@@ -5,18 +5,47 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { TopbarComponent } from './topbar/topbar.component';
+import { HomePageComponent } from './home-page/home-page.component';
+import { LoginPageComponent } from './login-page/login-page.component';
+import { UserRegisterPageComponent } from './user-register-page/user-register-page.component';
+import { ShopRegisterPageComponent } from './shop-register-page/shop-register-page.component';
+import { ListingCardComponent } from './listing-card/listing-card.component';
+import { ViewListingComponent } from './view-listing/view-listing.component';
+import { GalleryModule } from 'ng-gallery';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AuthModule } from './auth/auth.module';
+import { ShopItemsPageComponent } from './shop-items-page/shop-items-page.component';
+import { ShopOrdersPageComponent } from './shop-orders-page/shop-orders-page.component';
+import { ShopAddItemComponent } from './shop-add-item/shop-add-item.component';
+import { OrderCreateComponent } from './order-create/order-create.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SidebarComponent,
-    TopbarComponent
+    TopbarComponent,
+    HomePageComponent,
+    LoginPageComponent,
+    UserRegisterPageComponent,
+    ShopRegisterPageComponent,
+    ListingCardComponent,
+    ViewListingComponent,
+    ShopItemsPageComponent,
+    ShopOrdersPageComponent,
+    ShopAddItemComponent,
+    OrderCreateComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    GalleryModule,
+    HttpClientModule,
+    FormsModule,
+    AuthModule,
+    ReactiveFormsModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
