@@ -18,6 +18,7 @@ import { AuthModule } from './auth/auth.module';
 import { ShopItemsPageComponent } from './shop-items-page/shop-items-page.component';
 import { ShopOrdersPageComponent } from './shop-orders-page/shop-orders-page.component';
 import { ShopAddItemComponent } from './shop-add-item/shop-add-item.component';
+import { OrderCreateComponent } from './order-create/order-create.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { ShopAddItemComponent } from './shop-add-item/shop-add-item.component';
     ShopItemsPageComponent,
     ShopOrdersPageComponent,
     ShopAddItemComponent,
+    OrderCreateComponent,
   ],
   imports: [
     BrowserModule,

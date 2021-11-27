@@ -9,6 +9,7 @@ import { AuthGuard } from './auth/auth.guard';
 import { ShopItemsPageComponent } from './shop-items-page/shop-items-page.component';
 import { ShopOrdersPageComponent } from './shop-orders-page/shop-orders-page.component';
 import { ShopAddItemComponent } from './shop-add-item/shop-add-item.component';
+import { OrderCreateComponent } from './order-create/order-create.component';
 
 const routes: Routes = [
   {
@@ -34,6 +35,10 @@ const routes: Routes = [
   {
     path: 'shop-register',
     component: ShopRegisterPageComponent,
+  },
+  {
+    path: 'create-order/:itemId',
+    component: OrderCreateComponent,
   },
   { path: 'view-listing/:id', component: ViewListingComponent },
 
