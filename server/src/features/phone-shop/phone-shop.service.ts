@@ -14,17 +14,6 @@ async function register(
     data: PhoneShopRegisterDto,
     images: { profileImage: unknown; br: unknown }
 ) {
-    // make sure city id is valid
-    // todo: make a separate method on city feature
-    const city = await prisma.city.findUnique({
-        where: {
-            id: data.cityId,
-        },
-    });
-    if (!city) {
-        throw new HttpError(404, 'Invalid city id', 'CityNotFound');
-    }
-
     const phoneShop = await prisma.$transaction(async (prisma) => {
         /** create app user **/
         const user = await authService.register(
@@ -59,7 +48,6 @@ async function register(
                 address: data.address,
                 phone: data.phone,
                 isVerified: false,
-                cityId: data.cityId,
                 brImageId: brImage.id,
                 profileImageId: profileImage.id,
             },
@@ -144,7 +132,6 @@ async function findById(
                 type: true,
             },
         },
-        city: true,
         profileImage: true,
     };
     if (user?.type === 'Admin' || user?.type === 'Moderator') {

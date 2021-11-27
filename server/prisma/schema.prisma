@@ -20,15 +20,6 @@ model AppUser {
   @@map("app_user")
 }
 
-model City {
-  id         Int         @id @default(autoincrement())
-  name       String      @unique @db.VarChar(255)
-  zipCode    Int         @unique
-  customers  Customer[]  @relation("cityTocustomer")
-  phoneShops PhoneShop[] @relation("cityTophone_shop")
-
-  @@map("city")
-}
 
 model Customer {
   id             Int             @id @default(autoincrement())
@@ -37,16 +28,13 @@ model Customer {
   phone          String          @db.VarChar(15)
   address        String?         @db.VarChar(1000)
   userId         Int             @unique
-  cityId         Int
   profileImageId Int?
-  city           City            @relation("cityTocustomer", fields: [cityId], references: [id])
   profileImage   Image?          @relation("customerToimage", fields: [profileImageId], references: [id])
   appUser        AppUser         @relation("app_userTocustomer", fields: [userId], references: [id])
   orders         CustomerOrder[] @relation("customerTocustomer_order")
   reviews        Review[]        @relation("customerToreview")
 
   @@index([userId], name: "customer_app_user_id_fk")
-  @@index([cityId], name: "customer_city_id_fk")
   @@index([profileImageId], name: "customer_image_id_fk")
   @@map("customer")
 }
@@ -121,11 +109,9 @@ model PhoneShop {
   phone          String?         @db.VarChar(15)
   address        String          @db.VarChar(1000)
   isVerified     Boolean         @default(false)
-  cityId         Int
   userId         Int             @unique
   profileImageId Int?
   brImageId      Int?
-  city           City            @relation("cityTophone_shop", fields: [cityId], references: [id])
   profileImage   Image?          @relation("imageTophone_shop_profile_image_id", fields: [profileImageId], references: [id])
   brImage        Image?          @relation("imageTophone_shop_br_image_id", fields: [brImageId], references: [id])
   appUser        AppUser         @relation("app_userTophone_shop", fields: [userId], references: [id])
@@ -133,7 +119,6 @@ model PhoneShop {
 
   Item Item[] @relation("itemTo_phoneShop")
   @@index([userId], name: "phone_shop_app_user_id_fk")
-  @@index([cityId], name: "phone_shop_city_id_fk")
   @@index([profileImageId], name: "phone_shop_image_id_fk")
   @@index([brImageId], name: "phone_shop_br_image_id_fk")
   @@map("phone_shop")
