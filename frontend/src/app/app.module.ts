@@ -12,6 +12,12 @@ import { ShopRegisterPageComponent } from './shop-register-page/shop-register-pa
 import { ListingCardComponent } from './listing-card/listing-card.component';
 import { ViewListingComponent } from './view-listing/view-listing.component';
 import { GalleryModule } from 'ng-gallery';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AuthModule } from './auth/auth.module';
+import { ShopItemsPageComponent } from './shop-items-page/shop-items-page.component';
+import { ShopOrdersPageComponent } from './shop-orders-page/shop-orders-page.component';
+import { ShopAddItemComponent } from './shop-add-item/shop-add-item.component';
 
 @NgModule({
   declarations: [
@@ -24,8 +30,19 @@ import { GalleryModule } from 'ng-gallery';
     ShopRegisterPageComponent,
     ListingCardComponent,
     ViewListingComponent,
+    ShopItemsPageComponent,
+    ShopOrdersPageComponent,
+    ShopAddItemComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, GalleryModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    GalleryModule,
+    HttpClientModule,
+    FormsModule,
+    AuthModule,
+    ReactiveFormsModule,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })

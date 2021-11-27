@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { GalleryItem, ImageItem } from 'ng-gallery';
+import { HttpClient } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-view-listing',
@@ -8,8 +11,28 @@ import { GalleryItem, ImageItem } from 'ng-gallery';
 })
 export class ViewListingComponent implements OnInit {
   images: GalleryItem[] = [];
+  item: any;
 
-  constructor() {}
+  constructor(
+    private http: HttpClient,
+    private activatedRoute: ActivatedRoute
+  ) {
+    activatedRoute.paramMap.subscribe((params) => {
+      this.http
+        .get<any>(`${environment.apiUrl}/item/${params.get('id')}`)
+        .subscribe((res) => {
+          console.log(res);
+          this.item = res;
+          this.images = res.itemImages.map(
+            (img: any) =>
+              new ImageItem({
+                src: img.image.url,
+                thumb: img.image.url,
+              })
+          );
+        });
+    });
+  }
 
   ngOnInit(): void {
     this.images = [

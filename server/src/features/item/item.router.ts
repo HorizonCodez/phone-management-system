@@ -87,4 +87,13 @@ router.get('/', async (req, res, next) => {
     }
 });
 
+/** get all items by shop **/
+router.get('/shop/my-items', authGuard(['Shop']), async (req, res, next) => {
+    try {
+        return res.json(await itemService.getShopItems(req.session.user.id));
+    } catch (e) {
+        next(e);
+    }
+});
+
 export default router;

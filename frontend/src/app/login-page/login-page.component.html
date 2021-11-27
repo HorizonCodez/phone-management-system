@@ -3,22 +3,25 @@
     <div class="text-center mt-4">
       <h1 class="text-3xl text-gray-500 font-semibold">Login</h1>
     </div>
-    <div class="w-full flex flex-col items-center">
-      <div class="mt-8 w-full">
+    <div class="w-full flex flex-col items-center justify-center">
+      <div class="mt-8 w-8/12">
+        <div *ngIf="error" class="bg-red-100 text-red-900 px-4 py-2 mb-4 rounded-md">{{error}}</div>
         <div>
           <label for="email" class="mb-1">Email</label>
         </div>
-        <input id="email" type="email" placeholder="Email Address" class="border-2 px-3 py-2 w-10/12 rounded">
+        <input id="email" type="email" placeholder="Email Address" class="border-2 px-3 py-2 w-full rounded"
+               [(ngModel)]="email">
       </div>
-      <div class="mt-5 w-full">
+      <div class="mt-5 w-8/12">
         <div>
           <label for="password" class="mb-1">Password</label>
         </div>
-        <input id="password" type="password" placeholder="Password" class="border-2 px-3 py-2 w-10/12 rounded">
+        <input id="password" type="password" placeholder="Password" class="border-2 px-3 py-2 w-full rounded"
+               [(ngModel)]="password">
       </div>
-    </div>
-    <div class="w-full mt-4">
-      <button class="active-button ">Login</button>
+      <div class="w-8/12 mt-4  flex justify-end">
+        <button class="active-button " (click)="signIn()">Login</button>
+      </div>
     </div>
   </div>
 </div>

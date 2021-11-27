@@ -78,6 +78,13 @@ async function findById(id: number) {
                 },
             },
             reviews: true,
+            phoneShop: {
+                select: {
+                    shopName: true,
+                    phone: true,
+                    profileImage: true,
+                },
+            },
         },
     });
 }
@@ -109,9 +116,29 @@ async function findByQuery(query: FindItemByQueryDto) {
                 },
             },
             reviews: true,
+            phoneShop: {
+                select: {
+                    shopName: true,
+                },
+            },
         },
         skip: (query.page - 1) * ITEMS_PER_PAGE,
         take: ITEMS_PER_PAGE,
+    });
+}
+
+async function getShopItems(shopId: number) {
+    return prisma.item.findMany({
+        where: {
+            shopId,
+        },
+        include: {
+            itemImages: {
+                select: {
+                    image: true,
+                },
+            },
+        },
     });
 }
 
@@ -119,4 +146,5 @@ export default {
     addItem,
     findById,
     findByQuery,
+    getShopItems,
 };

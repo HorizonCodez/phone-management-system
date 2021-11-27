@@ -1,0 +1,75 @@
+<form [formGroup]="addItemForm" (ngSubmit)="submit()" >
+  <div *ngIf="!isLoading" class="m-3 p-4 bg-white flex flex-col items-center">
+    <h1 class="font-bold text-3xl text-center">Add Item</h1>
+    <div class="mb-4 relative w-8/12 mt-4">
+      <label for="title"
+             class="">Title</label>
+      <input
+        class="input border border-gray-400 appearance-none rounded w-full px-3 py-3 pt-5 pb-2 focus focus:border-indigo-600 focus:outline-none active:outline-none active:border-indigo-600"
+        id="title" type="text" formControlName="title">
+    </div>
+    <div class="mb-4 relative w-8/12 mt-4">
+      <label for="description"
+             class="">Description</label>
+      <textarea
+        class="input border border-gray-400 appearance-none rounded w-full px-3 py-3 pt-5 pb-2 focus focus:border-indigo-600 focus:outline-none active:outline-none active:border-indigo-600"
+        id="description" rows="10" formControlName="description"></textarea>
+
+    </div>
+    <div class="mb-4 relative w-8/12 mt-4">
+      <label for="stock"
+             class="">Available
+        Stock</label>
+      <input
+        class="input border border-gray-400 appearance-none rounded w-full px-3 py-3 pt-5 pb-2 focus focus:border-indigo-600 focus:outline-none active:outline-none active:border-indigo-600"
+        id="stock" type="number" formControlName="availableStock">
+
+    </div>
+    <div class="mb-4 relative w-8/12 mt-4">
+      <label for="price"
+             class="">Price</label>
+      <input
+        class="input border border-gray-400 appearance-none rounded w-full px-3 py-3 pt-5 pb-2 focus focus:border-indigo-600 focus:outline-none active:outline-none active:border-indigo-600"
+        id="price" type="number" formControlName="price">
+
+    </div>
+    <div class="flex justify-start flex-wrap w-8/12 mx-4 mt-2">
+      <div class="m-3" *ngFor="let url of images">
+        <img [src]="url" height="50px" width="50px">
+      </div>
+    </div>
+    <div class="mb-4 relative w-8/12 mt-4">
+      <label for="file"
+             class="">Images</label>
+      <div>
+        <input
+          formControlName="image"
+          id="file"
+          type="file"
+          class="form-control"
+          multiple=""
+          (change)="onFileChange($event)">
+      </div>
+
+    </div>
+    <div class="flex w-8/12 justify-end">
+      <button type="submit" class=" flex items-center  shadow-md  active:shadow-sm  px-4  py-3  rounded-2xl  bg-gradient-to-r  from-crimsonRed  to-red-600  hover:to-red-700
+  active:to-red-600  text-white  font-semibold  cursor-pointer  duration-200">Create Item
+      </button>
+    </div>
+  </div>
+  <div *ngIf="isLoading" class="m-3 p-4 bg-white flex flex-col items-center">
+    <div class="flex justify-center items-center">
+      <div
+        class="
+      animate-spin
+      rounded-full
+      h-32
+      w-32
+      border-t-2 border-b-2 border-crimsonRed
+    "
+      ></div>
+    </div>
+    <div class="mt-4 text-2xl font-bold">Creating Item</div>
+  </div>
+</form>
