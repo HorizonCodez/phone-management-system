@@ -12,6 +12,8 @@ import { ShopRegisterPageComponent } from './shop-register-page/shop-register-pa
 import { ListingCardComponent } from './listing-card/listing-card.component';
 import { ViewListingComponent } from './view-listing/view-listing.component';
 import { GalleryModule } from 'ng-gallery';
+import {FormsModule} from "@angular/forms";
+
 
 @NgModule({
   declarations: [
@@ -25,7 +27,7 @@ import { GalleryModule } from 'ng-gallery';
     ListingCardComponent,
     ViewListingComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, GalleryModule],
+  imports: [BrowserModule, AppRoutingModule, GalleryModule, FormsModule],
   providers: [],
   bootstrap: [AppComponent],
 })
