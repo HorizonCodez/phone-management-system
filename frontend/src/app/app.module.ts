@@ -19,6 +19,8 @@ import { ShopItemsPageComponent } from './shop-items-page/shop-items-page.compon
 import { ShopOrdersPageComponent } from './shop-orders-page/shop-orders-page.component';
 import { ShopAddItemComponent } from './shop-add-item/shop-add-item.component';
 import { OrderCreateComponent } from './order-create/order-create.component';
+import {FormsModule} from "@angular/forms";
+
 
 @NgModule({
   declarations: [
@@ -45,6 +47,7 @@ import { OrderCreateComponent } from './order-create/order-create.component';
     AuthModule,
     ReactiveFormsModule,
   ],
+  imports: [BrowserModule, AppRoutingModule, GalleryModule, FormsModule],
   providers: [],
   bootstrap: [AppComponent],
 })
